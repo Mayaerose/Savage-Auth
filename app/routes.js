@@ -51,6 +51,26 @@ module.exports = function(app, passport, db) {
       })
     })
 
+    app.put('/messages/thumbDown', (req, res) => {
+  db.collection('messages').findOneAndUpdate(
+    {name: req.body.name, msg: req.body.msg},
+    {$inc: {thumbDown: 1}},
+    {sort: {_id: -1}},
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({error: 'Could not update thumbs-down'});
+      }
+
+      if (!result.value) {
+        return res.status(404).json({error: 'Message not found'});
+      }
+
+      res.json({message: 'Thumbs-down updated'});
+    }
+  );
+});
+
     app.delete('/messages', (req, res) => {
       db.collection('messages').findOneAndDelete({name: req.body.name, msg: req.body.msg}, (err, result) => {
         if (err) return res.send(500, err)

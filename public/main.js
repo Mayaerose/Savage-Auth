@@ -1,5 +1,6 @@
 var thumbUp = document.getElementsByClassName("fa-thumbs-up");
-var trash = document.getElementsByClassName("fa-trash");
+var thumbDown = document.getElementsByClassName("fa-thumbs-down");
+var trash = document.getElementsByClassName("fa-trash-o");
 
 Array.from(thumbUp).forEach(function(element) {
       element.addEventListener('click', function(){
@@ -42,4 +43,31 @@ Array.from(trash).forEach(function(element) {
           window.location.reload()
         })
       });
+});
+
+Array.from(thumbDown).forEach(function(element) {
+  element.addEventListener('click', function() {
+    const message = this.closest('.message');
+    const name = message.children[0].innerText;
+    const msg = message.children[1].innerText;
+
+    fetch('/messages/thumbDown', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        name: name,
+        msg: msg
+      })
+    })
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error('Could not update thumbs-down');
+      }
+      window.location.reload();
+    })
+    .catch(function(error) {
+      console.error(error);
+      alert('Thumbs-down failed. Check the terminal for an error.');
+    });
+  });
 });
