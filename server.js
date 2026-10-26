@@ -15,7 +15,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
 
-var configDB = require('./config/database.js');
+var configDB = { url: process.env.MONGODB_URI };
 
 var db
 
@@ -40,7 +40,7 @@ app.set('view engine', 'ejs'); // set up ejs for templating
 
 // required for passport
 app.use(session({
-    secret: 'rcbootcamp2021b', // session secret
+    secret: process.env.SESSION_SECRET, // session secret
     resave: true,
     saveUninitialized: true
 }));
