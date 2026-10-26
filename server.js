@@ -22,14 +22,16 @@ var db
 // configuration ===============================================================
 mongoose.connect(configDB.url, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
-}, (err, database) => {
+  useUnifiedTopology: true,
+  user: process.env.MONGODB_USER,
+  pass: process.env.MONGODB_PASSWORD
+}, (err) => {
   if (err) {
     console.error('MongoDB connection failed. Check database credentials and network access.');
     return;
   }
   console.log('MongoDB connected');
-  db = database;
+  db = mongoose.connection.db;
   require('./app/routes.js')(app, passport, db);
 });
 
