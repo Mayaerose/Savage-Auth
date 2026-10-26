@@ -20,11 +20,18 @@ var configDB = { url: process.env.MONGODB_URI };
 var db
 
 // configuration ===============================================================
-mongoose.connect(configDB.url, (err, database) => {
-  if (err) return console.log(err)
-  db = database
+mongoose.connect(configDB.url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}, (err, database) => {
+  if (err) {
+    console.error('MongoDB connection failed. Check database credentials and network access.');
+    return;
+  }
+  console.log('MongoDB connected');
+  db = database;
   require('./app/routes.js')(app, passport, db);
-}); // connect to our database
+});
 
 require('./config/passport')(passport); // pass passport for configuration
 
